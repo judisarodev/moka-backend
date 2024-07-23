@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { models } = require('./../../db/sequelize');
+const path = require('path'); 
 
 router.get('/get-all-product-types', async (req, res) => {
     try{
@@ -40,6 +41,8 @@ router.get('/get-all-products', async (req, res) => {
         return res.status(500).json(error.message); 
     }
 });
+
+console.log('path', path.join(__dirname, '../../assets'));
 
 router.post('/insert-product', async (req, res) => {
     try{
