@@ -3,6 +3,8 @@ const express = require('express');
 const router = express.Router();
 const { models } = require('./../../db/sequelize');
 const path = require('path'); 
+const sequelize = require('./../../db/sequelize');
+const { Op } = require('sequelize');
 
 router.get('/get-all-product-types', async (req, res) => {
     try{
@@ -36,6 +38,28 @@ router.get('/get-all-products', async (req, res) => {
             response.push(p);
         }
         return res.status(200).json(response); 
+    }catch(error){
+        console.log(error);
+        return res.status(500).json(error.message); 
+    }
+});
+
+router.get('/get-random-cakes/:typeId', async (req, res) => {
+    try{
+        const { typeId } = req.params;
+        const arr = await models.TypePerProduct.findAll({ 
+                where: { typeId }, 
+                order: sequelize.random(),
+                limit: 10,
+                attributes: ['productId'] 
+            });
+            console.log(arr);
+            const whereClause = [];
+            for(const p of arr){
+                whereClause.push({ productId: p.productId });
+            }
+        const products = await models.Product.findAll({ where: { [Op.or]: whereClause }, attributes: ['productId', 'fileName'] });
+        return res.status(200).json(products); 
     }catch(error){
         console.log(error);
         return res.status(500).json(error.message); 
