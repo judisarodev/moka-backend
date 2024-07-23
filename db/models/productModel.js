@@ -17,9 +17,9 @@ const productSchema = {
     description: {
         type: DataTypes.STRING,
     },
-    imageUrl: {
+    fileName: {
         type: DataTypes.STRING,
-        field: 'image_url'
+        field: 'file_name'
     }
 };
 

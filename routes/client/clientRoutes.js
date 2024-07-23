@@ -49,10 +49,10 @@ router.post('/insert-product', async (req, res) => {
         const {
             name, 
             description,
-            imageUrl,
+            fileName,
             typesIds
         } = req.body;
-        const product = await models.Product.create({ name, description, imageUrl });
+        const product = await models.Product.create({ name, description, fileName });
         
         for(const id of typesIds){
             await models.TypePerProduct.create({ productId: product.dataValues.productId, typeId: id }); 
