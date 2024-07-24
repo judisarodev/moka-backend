@@ -33,6 +33,39 @@ router.get('/get-all-products', async (req, res) => {
     }
 });
 
+router.get('/get-product-detail/:productId', async (req, res) => {
+    try{
+        const { productId } = req.params;
+        const product = await models.Product.findOne({
+            attributes: ['name', 'description', 'fileName'],
+            where: { productId }
+        });
+
+        const typePerProducts = await models.TypePerProduct.findAll({
+            attributes: [],
+            where: {
+                productId
+            },
+            include: [{
+                model: models.Type,
+                as: 'type'
+            }]
+        });
+        
+        const categories = [];
+        for(const typePerProduct of typePerProducts){
+            categories.push(typePerProduct.dataValues.type.name);
+        }
+        return res.status(200).json({
+            ...product.toJSON(),
+            categories
+        }); 
+    }catch(error){
+        console.log(error);
+        return res.status(500).json(error.message); 
+    }
+});
+
 router.get('/get-all-products/:typeId', async (req, res) => {
     try{
         const { typeId } = req.params;
