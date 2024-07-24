@@ -9,7 +9,10 @@ const { Op, where } = require('sequelize');
 router.get('/get-all-product-types', async (req, res) => {
     try{
         const types = await models.Type.findAll();
-        return res.status(200).json(types); 
+        return res.status(200).json([{
+            typeId: 0,
+            name: 'Todas las categorías'
+        }, ...types]); 
     }catch(error){
         console.log(error);
         return res.status(500).json(error.message);
@@ -84,7 +87,7 @@ router.get('/get-random-cakes/:typeId', async (req, res) => {
 
 console.log('path', path.join(__dirname, '../../assets'));
 
-router.post('/insert-product', async (req, res) => {
+/*router.post('/insert-product', async (req, res) => {
     try{
         const {
             name, 
@@ -102,7 +105,6 @@ router.post('/insert-product', async (req, res) => {
         console.log(error.message);
         return res.status(500).json(error.message); 
     }
-});
-
+});*/
 
 module.exports = router; 
